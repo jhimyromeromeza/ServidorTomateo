@@ -34,7 +34,7 @@ export const signup = async (req, res) => {
             generarToken({_id: newUser._id}, res);
             const UserSave = await newUser.save();
 
-            res.status(201).json(UserSave)
+            res.status(201).json({message: "Usuario Creado"})
         }else {
             res.status(400).json({error: 'invalid user data'})
         }
@@ -53,11 +53,7 @@ export const login = async (req, res) => {
         const matchPassword = await bcrypt.compare(password, userFound.password);
         if(!matchPassword) return res.status(400).json({ Error: 'password Incorrecto'});
         generarToken({_id: userFound._id}, res);
-        res.status(200).json({
-            id: userFound._id,
-            userName: userFound.userName,
-            password: userFound.password
-        });
+        res.status(200).json({message: "Usuario Autenticado"});
 
     }catch(error) {
         res.status(500).json({error: "internal error"})
@@ -67,7 +63,6 @@ export const login = async (req, res) => {
 export const logout = (req, res) => {
     try {
         res.cookie("token", "", {expires: new Date(0)})
-        console.log("logou succel")
         res.status(200).json({message: "logout successfully"})
     }catch (error) {
         res.status(500).json({error: "internal error"})
